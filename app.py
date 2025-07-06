@@ -8,7 +8,9 @@ my_app = FastAPI()
 
 @my_app.get("/")
 async def root():
-    return FileResponse("html_pages/index.html")
+    request: Request
+    return templates.TemplateResponse("index.html",{"request" : request})
+    # return FileResponse("html_pages/index.html")
 
 @my_app.post("/calc")
 async def calc_plus(
