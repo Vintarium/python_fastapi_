@@ -1,4 +1,3 @@
-from fastapi.responses import FileResponse
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 
@@ -10,7 +9,6 @@ my_app = FastAPI()
 async def root():
     request: Request
     return templates.TemplateResponse("index.html",{"request" : request})
-    # return FileResponse("html_pages/index.html")
 
 @my_app.post("/calc")
 async def calc_plus(
