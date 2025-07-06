@@ -1,14 +1,10 @@
-import mimetypes
-from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(directory="html_pages")
 
-
 my_app = FastAPI()
-
 
 @my_app.get("/")
 async def root():
@@ -22,33 +18,24 @@ async def calc_plus(
     num2: str = Form(...),
     operation:  str = Form(...)):
 
-    if num1.isdigit() and num2.isdigit():
-        
+    try:
         if operation == "+":
-            result = int(num1) + int(num2)
+            result = float(num1) + float(num2)
         elif operation == "-":
-            result = int(num1) - int(num2)
+            result = float(num1) - float(num2)
         elif operation == "*":
-            result = int(num1) * int(num2)
+            result = float(num1) * float(num2)
         elif operation == "/":
-            result = int(num1) / int(num2)
+            if  float(num2) == 0:
+                return templates.TemplateResponse("division_by_zero.html", {"request" : request})
+            result = float(num1) / float(num2)
         else:
-            return FileResponse("html_pages/errorOperation.html")
+            return templates.TemplateResponse("errorOperation.html", {"request": request})
 
         return templates.TemplateResponse(
                 "result.html",
                 {"request": request, "result": result}
             )
-    else:
-        return FileResponse("html_pages/operandError.html")
+    except ValueError:
+        return templates.TemplateResponse("operandError.html",{"request": request})
 
-
-
-
-
-# localhost:8000/calc_divide?num1=10&num2=2
-
-
-# @my_app.get("/")
-# async def root():
-#     return FileResponse("index.html")
